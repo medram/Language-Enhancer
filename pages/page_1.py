@@ -3,6 +3,7 @@ import streamlit as st
 from core.middlewares import openai_required_middleware
 from core.utils import LANGUAGE_LEVELS, AVAILABLE_AI_MODELS
 
+# A Middleware-like for checking OpenAI key
 openai_required_middleware()
 
 
