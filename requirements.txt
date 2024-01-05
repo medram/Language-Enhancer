@@ -1,4 +1,4 @@
-streamlit
-openai
-pydantic
-streamlit_extras
+streamlit==1.29.0
+openai==1.6.1
+pydantic==2.5.3
+streamlit_extras==0.3.6
