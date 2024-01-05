@@ -1,0 +1,4 @@
+streamlit
+openai
+pydantic
+streamlit_extras
