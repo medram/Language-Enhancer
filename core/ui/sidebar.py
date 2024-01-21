@@ -23,6 +23,7 @@ def sidebar():
         selected_model_name = str(
             st.selectbox("**Model:**", AVAILABLE_AI_MODELS, index=0)
         )
+        st.session_state.model_name = selected_model_name
 
         st.session_state.temp = st.slider(
             "Temperature:", min_value=0.0, max_value=2.0, value=0.5
