@@ -1,12 +1,18 @@
 import streamlit as st
 
-from core.sidebar import sidebar
+from core.middlewares import openai_required_middleware
+from core.ui.sidebar import sidebar
+
+# A Middleware-like for checking OpenAI key
+openai_required_middleware()
 
 # Sidebar
 sidebar()
 
 
+st.write("# Enhance Text")
 st.text_area("**My Text:**")
+
 
 col1, col2 = st.columns(2)
 
