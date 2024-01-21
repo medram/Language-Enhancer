@@ -2,6 +2,9 @@ from typing import Optional
 
 import openai
 import streamlit as st
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_openai import ChatOpenAI
 from streamlit_extras.switch_page_button import switch_page
 
 from core.schemas import OpenAIModel
@@ -82,3 +85,60 @@ def is_api_key_valid(key: str) -> bool:
     except Exception as e:
         return False
     return True
+
+
+def get_selected_model():
+    name: str = str(st.session_state.model_name)
+    return get_current_model_by_name(name)
+
+
+# Create the LLM
+def get_LLM():
+    key: str = str(st.session_state.openai_key)
+    model: OpenAIModel = get_selected_model()
+    temp: float = float(st.session_state.temp)
+    max_tokens: int = int(st.session_state.max_tokens)
+
+    return ChatOpenAI(
+        model=model.name, temperature=temp, max_tokens=max_tokens, api_key=key
+    )
+
+
+def get_enhanced_text(text: str) -> str:
+    english_level: str = st.session_state.english_level
+
+    prompt = ChatPromptTemplate.from_messages(
+        [
+            (
+                "system",
+                """In English, Please enhance the following text to be in {english_level} level.\n
+                Note: Ensure to answer in Markdown format (and make important info bold).
+                """,
+            ),
+            ("user", "Text:\n{input}"),
+        ]
+    )
+
+    llm = get_LLM()
+    chain = prompt | llm | StrOutputParser()
+    return chain.invoke({"input": text, "english_level": english_level})
+
+
+def get_my_current_text_level(text: str) -> str:
+    english_level: str = st.session_state.english_level
+
+    prompt = ChatPromptTemplate.from_messages(
+        [
+            (
+                "system",
+                """In English, Please What is the english level of the following text (A1,A2,B1,B2,C1,C2)? And why?\n
+                Note: Ensure to answer in Markdown format (and make important info bold).
+                """,
+            ),
+            ("user", "Text:\n{input}"),
+        ]
+    )
+
+    llm = get_LLM()
+    chain = prompt | llm | StrOutputParser()
+    return chain.invoke({"input": text})
