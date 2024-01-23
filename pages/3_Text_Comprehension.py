@@ -1,9 +1,8 @@
-from typing import Optional
-
 import streamlit as st
 
 from core.middlewares import openai_required_middleware
 from core.ui.sidebar import sidebar
+from core.utils import get_text_answer
 
 # A Middleware-like for checking OpenAI key
 openai_required_middleware()
@@ -13,9 +12,10 @@ sidebar()
 
 st.write("# Text Comprehension")
 
-text = st.text_area("**Text:**")
-question = st.text_area("**Question:**")
-submit = st.button("Answer", use_container_width=True)
+text: str = st.text_area("**Text:**")
+question: str = st.text_area("**Question:**")
+submit = st.button("✨ Answer", use_container_width=True)
 
 if submit:
-    st.write("Nice :D")
+    with st.spinner("Running..."):
+        st.write(get_text_answer(text, question))
