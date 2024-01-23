@@ -6,7 +6,6 @@ import streamlit as st
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_openai import ChatOpenAI
-from streamlit_extras.switch_page_button import switch_page
 
 from core.schemas import OpenAIModel
 
@@ -82,7 +81,7 @@ def is_api_key_valid(key: str) -> bool:
             ],
             max_tokens=5,
         )
-    except Exception as e:
+    except Exception:
         return False
     return True
 
@@ -131,8 +130,10 @@ def get_my_current_text_level(text: str) -> str:
         [
             (
                 "system",
-                """In English, Please What is the english level of the following text (A1,A2,B1,B2,C1,C2)? And why?\n
-                Note: Ensure to answer in Markdown format (and make important info bold).
+                """In English,Please What is the english level of the following text (e.g. A1,A2,B1,B2,C1,C2)? as well as formal or informal? And why?\n
+                ## Notes:
+                - Ensure to answer in Markdown format (and make important info bold).
+                - Ensure to reply in {english_level} English level.
                 """,
             ),
             ("user", "Text:\n{input}"),
@@ -141,7 +142,7 @@ def get_my_current_text_level(text: str) -> str:
 
     llm = get_LLM()
     chain = prompt | llm | StrOutputParser()
-    return chain.invoke({"input": text})
+    return chain.invoke({"input": text, "english_level": english_level})
 
 
 def count_words(text: str) -> int:
@@ -149,3 +150,27 @@ def count_words(text: str) -> int:
     text = re.sub(r"\s+", " ", text)
 
     return len(text.split(" "))
+
+
+def get_text_answer(text: str, question: str) -> str:
+    english_level: str = st.session_state.english_level
+    prompt = ChatPromptTemplate.from_messages(
+        [
+            (
+                "system",
+                """Answers qustions in English based on the text bellow:
+                ## NOTES:
+                - Must answer in Markdown format (and make important info bold).
+                - Must to reply in {english_level} English level.
+                """,
+            ),
+            ("user", "## TEXT:\n{text}\n\n## QUESTION: {question}?\n\n"),
+            ("system", "## ANSWER:"),
+        ]
+    )
+
+    llm = get_LLM()
+    chain = prompt | llm | StrOutputParser()
+    return chain.invoke(
+        {"question": question, "text": text, "english_level": english_level}
+    )

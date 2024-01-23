@@ -1,5 +1,3 @@
-from typing import Optional
-
 import streamlit as st
 
 from core.middlewares import openai_required_middleware
