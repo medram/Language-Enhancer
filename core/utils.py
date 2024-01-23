@@ -1,3 +1,4 @@
+import re
 from typing import Optional
 
 import openai
@@ -142,3 +143,10 @@ def get_my_current_text_level(text: str) -> str:
     llm = get_LLM()
     chain = prompt | llm | StrOutputParser()
     return chain.invoke({"input": text})
+
+
+def count_words(text: str) -> int:
+    text = re.sub(r"[\!\?-]+", "", text)
+    text = re.sub(r"\s+", " ", text)
+
+    return len(text.split(" "))

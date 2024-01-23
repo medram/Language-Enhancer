@@ -2,7 +2,7 @@ import streamlit as st
 
 from core.middlewares import openai_required_middleware
 from core.ui.sidebar import sidebar
-from core.utils import get_enhanced_text, get_my_current_text_level
+from core.utils import count_words, get_enhanced_text, get_my_current_text_level
 
 # A Middleware-like for checking OpenAI key
 openai_required_middleware()
@@ -14,6 +14,8 @@ sidebar()
 st.write("# Enhance Text")
 text: str = st.text_area("**My Text:**")
 
+words = count_words(text)
+st.write(f"Worlds: {words}")
 
 col1, col2 = st.columns(2)
 
