@@ -34,5 +34,5 @@ with st.spinner("Running..."):
         if my_level:
             st.write("### My Current Text Level:")
             st.write(get_my_current_text_level(text))
-    else:
+    elif enhance or my_level:
         st.warning("Please write someting.")
