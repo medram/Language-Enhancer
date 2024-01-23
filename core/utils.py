@@ -24,7 +24,6 @@ _AVAILABLE_AI_MODELS = [
     {"name": "gpt-3.5-turbo-1106", "max_tokens": 4096, "is_chat_model": True},
     {"name": "gpt-3.5-turbo-16k", "max_tokens": 16384, "is_chat_model": True},
     {"name": "gpt-3.5-turbo-16k-0613", "max_tokens": 16384, "is_chat_model": True},
-    {"name": "text-davinci-003", "max_tokens": 4096, "is_chat_model": False},
 ]
 
 AVAILABLE_AI_MODELS: list[OpenAIModel] = [
